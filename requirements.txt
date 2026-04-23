@@ -1,0 +1,9 @@
+numpy
+rawpy
+pillow
+pyyaml
+PySide6
+geocoder
+pyperclip
+pyexiftool
+pyinstaller

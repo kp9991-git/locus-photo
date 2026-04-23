@@ -1,0 +1,12 @@
+base_dir_labels:
+- Pictures
+base_dir_selected_label: Pictures
+grid_items_per_page: 4
+theme: gray
+base_dirs:
+- $$$PICTURES$$$
+logging:
+  enabled: false
+  level: INFO
+  diagnostics: false
+  redact_gps: true

@@ -1,0 +1,93 @@
+LOCUS PHOTO — TERMS OF USE
+
+Copyright (c) 2026 Kyrylo Protsenko. All rights reserved.
+
+Locus Photo is licensed under the GNU General Public License v3.0 or
+later (see the LICENSE file). These Terms of Use supplement, and do not
+replace, the terms of that license. In the event of a direct conflict,
+the GNU GPL v3.0 governs.
+
+By installing, running, or otherwise using Locus Photo (the "Software"),
+you agree to the following terms. If you do not agree, do not use the
+Software.
+
+
+1. NO WARRANTY
+
+The Software is provided "AS IS" and "AS AVAILABLE", without warranty
+of any kind, express or implied, including but not limited to warranties
+of merchantability, fitness for a particular purpose, title, accuracy,
+and non-infringement. No advice or information obtained from the
+Software or its authors creates any warranty not expressly stated in
+these terms.
+
+
+2. LIMITATION OF LIABILITY
+
+To the maximum extent permitted by applicable law, in no event shall
+the authors, copyright holders, or contributors be liable for any
+claim, damages, or other liability — whether in an action of contract,
+tort, negligence, strict liability, or otherwise — arising from, out
+of, or in connection with the Software or its use. This includes,
+without limitation:
+
+  - loss or corruption of photos, image files, or metadata
+    (including GPS coordinates);
+  - overwritten, renamed, or deleted files;
+  - incorrect, missing, or altered EXIF/XMP/IPTC data;
+  - any direct, indirect, incidental, special, consequential,
+    exemplary, or punitive damages of any kind.
+
+
+3. FILE MODIFICATION AND DATA LOSS
+
+The Software modifies photo files and their embedded metadata,
+including GPS coordinates. These modifications may be irreversible.
+YOU are solely responsible for maintaining complete, verified backups
+of your photos and any related data before using the Software. The
+authors strongly recommend testing the Software on non-critical copies
+of your photos first.
+
+
+4. USER RESPONSIBILITY
+
+You assume all risk associated with your use of the Software, including
+the selection, installation, configuration, and results obtained. You
+are responsible for verifying that any changes made by the Software
+are correct and acceptable for your purposes before relying on them.
+
+
+5. NO PROFESSIONAL ADVICE
+
+The Software is not a substitute for professional data-management,
+forensic, archival, journalistic, or legal services. Do not rely on
+the Software for any use where errors could cause loss, harm, or
+legal consequences.
+
+
+6. THIRD-PARTY COMPONENTS
+
+The Software incorporates ExifTool (by Phil Harvey) and uses
+OpenStreetMap data, each subject to their own licenses and terms of
+use. Your use of those components is governed by their respective
+licenses. See the THIRD_PARTY_LICENSES.txt file for details.
+
+
+7. CHANGES TO THESE TERMS
+
+These terms may be updated in future versions of the Software.
+Continued use after an update constitutes acceptance of the updated
+terms. The Software may prompt you to re-accept the terms when they
+change materially.
+
+
+8. SEVERABILITY
+
+If any provision of these terms is held to be invalid or unenforceable,
+the remaining provisions shall remain in full force and effect.
+
+
+9. CONTACT
+
+For issues, source code, and bug reports, see:
+https://github.com/kp9991-git/locus-photo
