@@ -1,0 +1,44 @@
+Locus Photo — a photo viewer with GPS metadata editing and map integration.
+
+Copyright (C) 2026 Kyrylo Protsenko
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+The full license text is provided in the LICENSE file distributed with
+this program. Additional terms governing your use of the Software are
+set out in the TERMS_OF_USE.txt file.
+
+
+THIRD-PARTY COMPONENTS
+----------------------
+
+This program incorporates or uses third-party components, each subject
+to its own license. See THIRD_PARTY_LICENSES.txt for details. Notable
+components include:
+
+  - ExifTool by Phil Harvey — https://www.exiftool.org
+    Licensed under the GNU General Public License or the Artistic License.
+
+  - OpenStreetMap data — https://www.openstreetmap.org/copyright
+    Map data © OpenStreetMap contributors, licensed under the
+    Open Database License (ODbL).
+
+  - PySide6 — licensed under the GNU Lesser General Public License v3.
+
+
+CONTACT
+-------
+
+Source code, issues, and releases:
+https://github.com/kp9991-git/locus-photo

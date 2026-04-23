@@ -1,0 +1,47 @@
+Locus Photo — Third-Party Licenses and Attributions
+====================================================
+
+This distribution includes and/or uses the following third-party components.
+Each is copyrighted by its respective author(s) and distributed under its own
+license terms as noted below.
+
+------------------------------------------------------------------------
+ExifTool
+------------------------------------------------------------------------
+Author:  Phil Harvey
+Version: 13.55 (bundled with this distribution)
+Home:    https://www.exiftool.org
+License: GNU General Public License v3.0 OR Artistic License
+         https://www.exiftool.org/index.html#license
+
+ExifTool is invoked by Locus Photo as a separate process via pyexiftool.
+It is used to read and write photo metadata (EXIF, XMP, IPTC, GPS).
+
+The full ExifTool license text is bundled alongside the ExifTool binary
+inside this distribution at:
+    exiftool/Windows/exiftool-13.55_64/exiftool_files/LICENSE  (Windows build)
+    exiftool/Unix/Image-ExifTool-13.55/                        (Unix build; see README)
+
+------------------------------------------------------------------------
+OpenStreetMap
+------------------------------------------------------------------------
+Map data and tiles: © OpenStreetMap contributors
+License: Open Database License (ODbL)
+         https://www.openstreetmap.org/copyright
+
+------------------------------------------------------------------------
+Python dependencies
+------------------------------------------------------------------------
+- PySide6                   LGPL v3              https://www.qt.io/licensing/
+- numpy                     BSD-3-Clause         https://numpy.org
+- rawpy                     MIT                  https://github.com/letmaik/rawpy
+- Pillow                    MIT-CMU              https://python-pillow.org
+- PyYAML                    MIT                  https://pyyaml.org
+- geocoder                  MIT                  https://github.com/DenisCarriere/geocoder
+- pyperclip                 BSD-3-Clause         https://github.com/asweigart/pyperclip
+- pyexiftool                BSD-3-Clause         https://github.com/sylikc/pyexiftool
+
+------------------------------------------------------------------------
+Locus Photo itself
+------------------------------------------------------------------------
+See the LICENSE file distributed with this software.
