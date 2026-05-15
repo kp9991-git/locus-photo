@@ -118,6 +118,10 @@ class _UIRightHarness(UIMixin):
 
     def __init__(self):
         self._load_initial_map_position_async = MagicMock()
+        self._icons_applied = False
+
+    def _apply_button_icons(self):
+        self._icons_applied = True
 
     def _on_map_loaded(self):
         return None
@@ -278,10 +282,10 @@ def test_on_system_color_scheme_changed_only_for_system_choice(qapp):
 def test_setup_right_panel_initializes_map_and_connects_load_signal():
     harness = _UIRightHarness()
     with patch("viewer.mixins.ui.MapWidget", _DummyMapWidget):
-        harness._setup_right_panel()
+        right_panel = harness._setup_right_panel()
 
     assert isinstance(harness.map_widget, _DummyMapWidget)
-    assert harness.map_widget.min_width == harness.MIN_MAP_WIDTH
+    assert right_panel.minimumWidth() == harness.MIN_MAP_WIDTH
     assert harness._on_map_loaded in harness.map_widget.loadFinished.callbacks
     harness._load_initial_map_position_async.assert_called_once()
 

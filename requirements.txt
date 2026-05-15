@@ -4,6 +4,7 @@ pillow
 pyyaml
 PySide6
 geocoder
+requests
 pyperclip
 pyexiftool
 pyinstaller

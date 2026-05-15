@@ -260,6 +260,7 @@ class MainApp(GpsOperationsMixin, ThemeMixin, ImageLoadingMixin, TreeMixin, Phot
         self.paste_from_clipboard_button = None
         self.undo_gps_button = None
         self.redo_gps_button = None
+        self.map_search_button = None
         self.first_page_button = None
         self.prev_page_button = None
         self.next_page_button = None
@@ -503,6 +504,7 @@ class MainApp(GpsOperationsMixin, ThemeMixin, ImageLoadingMixin, TreeMixin, Phot
         self.signals.gps_write_completed.connect(self._on_gps_write_completed, Qt.ConnectionType.QueuedConnection)
         self.signals.gps_read_completed.connect(self._on_gps_read_completed, Qt.ConnectionType.QueuedConnection)
         self.signals.zoom_image_ready.connect(self._on_zoom_image_ready, Qt.ConnectionType.QueuedConnection)
+        self.signals.place_search_failed.connect(self._on_place_search_failed, Qt.ConnectionType.QueuedConnection)
 
     def _start_background_workers(self):
         image_load_thread = threading.Thread(daemon=True, target=self.load_images_background)

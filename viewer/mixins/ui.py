@@ -1,6 +1,7 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSplitter, QComboBox, QTreeWidget, QPushButton, QLabel, QGridLayout, QSizeGrip, QApplication, QStyle
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSplitter, QComboBox, QTreeWidget, QPushButton, QLabel, QGridLayout, QSizeGrip, QApplication, QStyle, QLineEdit, QMessageBox
 from PySide6.QtCore import Qt
 import threading
+import requests
 from viewer.ui.widgets import MapWidget, MapHintBubble, ThemedTitleBar
 import geocoder
 
@@ -40,13 +41,13 @@ class UIMixin:
 
         left_panel = self._setup_left_panel()
         center_panel = self._setup_center_panel()
-        self._setup_right_panel()
+        right_panel = self._setup_right_panel()
 
         # Use splitter for resizable panels
         splitter = QSplitter(Qt.Orientation.Horizontal)
         splitter.addWidget(left_panel)
         splitter.addWidget(center_panel)
-        splitter.addWidget(self.map_widget)
+        splitter.addWidget(right_panel)
         splitter.setChildrenCollapsible(True)
         splitter.setCollapsible(2, False)
         splitter.setStretchFactor(0, 2)
@@ -188,12 +189,74 @@ class UIMixin:
         return center_panel
 
     def _setup_right_panel(self):
+        right_panel = QWidget()
+        right_panel.setMinimumWidth(self.MIN_MAP_WIDTH)
+        right_layout = QVBoxLayout(right_panel)
+        right_layout.setContentsMargins(0, 0, 0, 0)
+        right_layout.setSpacing(4)
+
+        search_row = QWidget()
+        search_layout = QHBoxLayout(search_row)
+        search_layout.setContentsMargins(0, 0, 0, 0)
+        search_layout.setSpacing(4)
+        self.map_search_bar = QLineEdit()
+        self.map_search_bar.setPlaceholderText("Search place...")
+        self.map_search_button = QPushButton()
+        self.map_search_button.setToolTip("Search place")
+        self.map_search_button.setFixedWidth(34)
+        self.map_search_bar.setFixedHeight(self.map_search_button.sizeHint().height())
+        search_layout.addWidget(self.map_search_bar)
+        search_layout.addWidget(self.map_search_button)
+        right_layout.addWidget(search_row)
+
         self.map_widget = MapWidget(logger=getattr(self, 'logger', None))
-        self.map_widget.setMinimumWidth(self.MIN_MAP_WIDTH)
         self.map_widget.loadFinished.connect(self._on_map_loaded)
         self.map_widget.copy_position.connect(self._on_map_position_copied)
+        right_layout.addWidget(self.map_widget, stretch=1)
+
+        self._apply_button_icons()
+        self.map_search_button.clicked.connect(self._on_place_search)
+        self.map_search_bar.returnPressed.connect(self._on_place_search)
+
         self._load_initial_map_position_async()
         self._maybe_show_map_hint()
+        return right_panel
+
+    def _on_place_search(self):
+        query = self.map_search_bar.text().strip()
+        if not query:
+            return
+
+        def _worker():
+            try:
+                resp = requests.get(
+                    "https://nominatim.openstreetmap.org/search",
+                    params={"q": query, "format": "json", "limit": 1},
+                    headers={"User-Agent": "LocusPhoto/1.0"},
+                    timeout=10,
+                )
+                resp.raise_for_status()
+                data = resp.json()
+            except Exception as exc:
+                if self.logger:
+                    self.logger.warning("Place search failed for %r: %s", query, exc)
+                self.signals.place_search_failed.emit("Search failed: {}".format(exc))
+                return
+            if data:
+                lat = float(data[0]["lat"])
+                lng = float(data[0]["lon"])
+                if self.logger:
+                    self.logger.info("Place search: %r -> %s, %s", query, lat, lng)
+                self.signals.update_map_signal.emit([(lat, lng)])
+            else:
+                if self.logger:
+                    self.logger.info("Place not found: %r", query)
+                self.signals.place_search_failed.emit("Place not found: {}".format(query))
+
+        threading.Thread(target=_worker, daemon=True).start()
+
+    def _on_place_search_failed(self, message):
+        QMessageBox.information(self.root, "Place search", message)
 
     def _maybe_show_map_hint(self):
         config = getattr(self, "config", None)

@@ -22,6 +22,7 @@ class WorkerSignals(QObject):
     gps_write_completed = Signal(object)
     gps_read_completed = Signal(object)
     zoom_image_ready = Signal(object)
+    place_search_failed = Signal(str)
 
 
 class ZoomablePhotoLabel(QLabel):

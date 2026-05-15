@@ -193,6 +193,12 @@ class ThemeMixin:
             self.settings_button.setIcon(self._tint_icon_for_theme(settings_icon, icon_size))
             self.settings_button.setIconSize(icon_size)
 
+        map_search_button = getattr(self, "map_search_button", None)
+        if map_search_button is not None:
+            search_icon = self._get_button_icon("go-next", QStyle.StandardPixmap.SP_ArrowForward)
+            map_search_button.setIcon(self._tint_icon_for_theme(search_icon, icon_size))
+            map_search_button.setIconSize(icon_size)
+
     def _apply_theme_stylesheet(self):
         stylesheet = build_stylesheet(**self.theme)
         self.root.setStyleSheet(stylesheet)
