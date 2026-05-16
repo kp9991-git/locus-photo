@@ -10,3 +10,6 @@ logging:
   level: INFO
   diagnostics: false
   redact_gps: true
+backup:
+  mode: folder
+  dir: null  # null = default: ~/.locus-photo-backups

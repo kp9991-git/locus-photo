@@ -45,6 +45,7 @@ from viewer.ui.styling import (
     normalize_theme_choice,
 )
 from viewer.ui.widgets import WorkerSignals
+from viewer.metadata.backup_manager import BackupManager
 from viewer.metadata.gps_operations import GpsOperationsMixin
 from viewer.ui.dialogs import AboutDialog, TermsAcceptanceDialog, TERMS_VERSION
 from viewer.core.enums import MetaTagName
@@ -387,6 +388,27 @@ class MainApp(GpsOperationsMixin, ThemeMixin, ImageLoadingMixin, TreeMixin, Phot
         if self.config.get('grid_items_per_page') != self.grid_items_per_page:
             self.config['grid_items_per_page'] = self.grid_items_per_page
             self._config_updated = True
+
+        backup_config = self.config.get("backup")
+        if not isinstance(backup_config, dict):
+            backup_config = {"mode": "off", "dir": None}
+            self.config["backup"] = backup_config
+            self._config_updated = True
+        else:
+            if "mode" not in backup_config:
+                backup_config["mode"] = "off"
+                self._config_updated = True
+            if "dir" not in backup_config:
+                backup_config["dir"] = None
+                self._config_updated = True
+        backup_mode = backup_config.get("mode", "off")
+        backup_dir = backup_config.get("dir") or None
+        self.backup_manager = BackupManager(mode=backup_mode, backup_dir=backup_dir, logger=self.logger)
+        try:
+            os.makedirs(self.backup_manager.resolved_backup_dir(), exist_ok=True)
+        except OSError:
+            if self.logger:
+                self.logger.warning("Could not create default backup directory", exc_info=True)
 
         if self._config_updated:
             self.save_config()

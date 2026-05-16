@@ -1,5 +1,6 @@
-from PySide6.QtWidgets import QToolButton, QMenu
+from PySide6.QtWidgets import QToolButton, QMenu, QFileDialog
 from PySide6.QtGui import QActionGroup
+from viewer.metadata.backup_manager import BackupManager
 
 class SettingsMixin:
     # ── Settings menu ─────────────────────────────────────────────────
@@ -36,14 +37,32 @@ class SettingsMixin:
             self.grid_page_size_actions[value] = action
 
         settings_menu.addSeparator()
+        backup_mode_menu = settings_menu.addMenu("Backup Mode")
+        self.backup_mode_action_group = QActionGroup(settings_button)
+        self.backup_mode_action_group.setExclusive(True)
+        self.backup_mode_actions = {}
+
+        for label, mode_key in (("Off", "off"), ("Same Directory", "same_dir"), ("Dedicated Folder", "folder")):
+            action = backup_mode_menu.addAction(label)
+            action.setCheckable(True)
+            action.setData(mode_key)
+            self.backup_mode_action_group.addAction(action)
+            self.backup_mode_actions[mode_key] = action
+
+        set_folder_action = settings_menu.addAction("Set Backup Folder...")
+        set_folder_action.triggered.connect(self._on_set_backup_folder_triggered)
+
+        settings_menu.addSeparator()
         about_action = settings_menu.addAction("About")
         about_action.triggered.connect(self.about_button_click)
 
         self.theme_action_group.triggered.connect(self._on_theme_action_triggered)
         self.grid_page_size_action_group.triggered.connect(self._on_grid_items_per_page_triggered)
+        self.backup_mode_action_group.triggered.connect(self._on_backup_mode_action_triggered)
         settings_button.setMenu(settings_menu)
         self._sync_theme_menu_selection()
         self._sync_grid_items_per_page_menu_selection()
+        self._sync_backup_mode_menu_selection()
         return settings_button
 
     def _on_theme_action_triggered(self, action):
@@ -93,4 +112,47 @@ class SettingsMixin:
         except (TypeError, ValueError):
             items_per_page = cls.DEFAULT_GRID_ITEMS_PER_PAGE
         return max(1, items_per_page)
+
+    # ── Backup mode ───────────────────────────────────────────────────
+
+    def _sync_backup_mode_menu_selection(self):
+        if not getattr(self, "backup_mode_actions", None):
+            return
+        backup_config = self.config.get("backup")
+        mode = backup_config.get("mode", "off") if isinstance(backup_config, dict) else "off"
+        action = self.backup_mode_actions.get(mode)
+        if action is not None:
+            action.setChecked(True)
+
+    def _on_backup_mode_action_triggered(self, action):
+        mode = action.data()
+        if not mode:
+            return
+        backup_config = self.config.get("backup")
+        if not isinstance(backup_config, dict):
+            backup_config = {}
+            self.config["backup"] = backup_config
+        backup_config["mode"] = mode
+        backup_dir = backup_config.get("dir") or None
+        self.backup_manager = BackupManager(mode=mode, backup_dir=backup_dir, logger=getattr(self, "logger", None))
+        self.save_config()
+        if self.logger:
+            self.logger.info("Backup mode changed to %r", mode)
+
+    def _on_set_backup_folder_triggered(self):
+        start_dir = getattr(self, "backup_manager", None)
+        start_dir = start_dir.resolved_backup_dir() if start_dir is not None else ""
+        folder = QFileDialog.getExistingDirectory(self.root, "Select Backup Folder", start_dir)
+        if not folder:
+            return
+        backup_config = self.config.get("backup")
+        if not isinstance(backup_config, dict):
+            backup_config = {}
+            self.config["backup"] = backup_config
+        backup_config["dir"] = folder
+        mode = backup_config.get("mode", "off")
+        self.backup_manager = BackupManager(mode=mode, backup_dir=folder, logger=getattr(self, "logger", None))
+        self.save_config()
+        if self.logger:
+            self.logger.info("Backup folder set to %r", folder)
 

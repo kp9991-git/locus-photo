@@ -11,6 +11,7 @@ from PySide6.QtGui import QAction, QKeySequence
 
 from viewer.core.logging_config import lock
 from viewer.core.enums import MetaTagName
+from viewer.metadata.backup_manager import BackupManager
 from viewer.metadata.exiftool_wrapper import ExifToolWrapper
 
 
@@ -135,9 +136,16 @@ class GpsOperationsMixin:
             gps_for_fpath = next(iter(gps_position.values()))
         return self._normalize_gps_tags(gps_for_fpath)
 
+    def _backup_file_before_write(self, fpath: str) -> str | None:
+        backup_manager = getattr(self, "backup_manager", None)
+        if not isinstance(backup_manager, BackupManager):
+            return None
+        return backup_manager.backup_file(fpath)
+
     def _apply_gps_tags(self, fpath, tags, exiftool_instance=None):
         if exiftool_instance is None:
             exiftool_instance = self.exiftool
+        self._backup_file_before_write(fpath)
         normalized_tags = self._normalize_gps_tags(tags)
         exiftool_instance.apply_meta_data(
             fpath,
