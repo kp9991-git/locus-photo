@@ -240,8 +240,9 @@ def test_init_config_skips_save_when_valid(tmp_path, monkeypatch):
     app_obj.exiftool.get_list_of_supported_extensions.return_value = []
     
     config_path = tmp_path / "config.yaml"
-    # Provide a fully valid config
-    config_path.write_text(json.dumps({"theme": "dark", "grid_items_per_page": 4}), encoding="utf-8")
+    # Provide a fully valid config including the backup section
+    valid_config = {"theme": "dark", "grid_items_per_page": 4, "backup": {"mode": "off", "dir": None}}
+    config_path.write_text(json.dumps(valid_config), encoding="utf-8")
     
     monkeypatch.setattr("viewer.app.MainApp.get_config_fpath", staticmethod(lambda copy_local=False: str(config_path)))
     
@@ -251,7 +252,7 @@ def test_init_config_skips_save_when_valid(tmp_path, monkeypatch):
     app_obj.sanitize_grid_items_per_page = staticmethod(lambda x: x)
     
     import yaml
-    with patch("viewer.app.yaml.safe_load", return_value={"theme": "dark", "grid_items_per_page": 4}):
+    with patch("viewer.app.yaml.safe_load", return_value=valid_config):
         app_obj._init_config_and_logger()
     
     assert app_obj._config_updated is False
